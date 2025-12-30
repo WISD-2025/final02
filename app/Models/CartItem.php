@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class CarItem extends Model
+class CartItem extends Model
 {
     /** @use HasFactory<\Database\Factories\CarItemFactory> */
     use HasFactory;

@@ -6,14 +6,16 @@ use App\Models\CarItem;
 use App\Http\Requests\StoreCarItemRequest;
 use App\Http\Requests\UpdateCarItemRequest;
 
-class CarItemController extends Controller
+class CartItemController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $cartItems = auth()->user()->cartItems;
+        $data = ['cartItems' => $cartItems,];
+        return view('cart_items.index', $data);
     }
 
     /**
