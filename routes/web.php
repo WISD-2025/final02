@@ -5,13 +5,14 @@ use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartItemController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
 Route::get('/cart_items', [CartItemController::class, 'index'])->name('cart_items.index');
-
+Route::resource('orders', OrderController::class)->middleware(['auth']);
 Route::resource('products',ProductController::class)->only([
     'index',
     'show',
