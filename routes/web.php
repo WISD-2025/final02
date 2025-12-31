@@ -19,7 +19,7 @@ Route::resource('products',ProductController::class)->only([
     'store',
     'update',
 ]);
-/*
+/* 一、
   products.index    GET                  /                       ProductController@index
                     列出所有產品
   products.store    POST                products                 ProductController@store
