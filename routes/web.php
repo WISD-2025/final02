@@ -34,6 +34,15 @@ Route::resource('products',ProductController::class)->only([
                     刪除某一產品
   products.edit     GET|HEAD            products/{product}/edit  ProductController@edit
                     產生某一品牌修改的表單
+
+  二、
+  Route::get('products', [ProductController::class, 'index']);
+  Route::get('products/create', [ProductController::class, 'create']);
+  Route::post('products', [ProductController::class, 'store']);
+  Route::get('products/{product}', [ProductController::class, 'show']);
+  Route::get('products/{product}/edit', [ProductController::class, 'edit']);
+  Route::put('products/{product}', [ProductController::class, 'update']);
+  Route::delete('products/{product}', [ProductController::class, 'destroy']);
 */
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
