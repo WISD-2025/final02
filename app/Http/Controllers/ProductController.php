@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Product; 
 
 use Illuminate\Http\Request;
 
@@ -60,5 +61,16 @@ class ProductController extends Controller
     public function destroy(string $product)
     {
         return 'destroy';
+    }
+
+    public function shop()
+    {
+        $products = Product::all();
+        return view('shop.index', compact('products'));
+    }
+
+    public function item(Product $product)
+    {
+        return view('shop.item', compact('product'));
     }
 }

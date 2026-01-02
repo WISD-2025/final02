@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CarItem;
-use App\Http\Requests\StoreCarItemRequest;
-use App\Http\Requests\UpdateCarItemRequest;
+use App\Models\CartItem;
+use App\Http\Requests\StoreCartItemRequest;
+use App\Http\Requests\UpdateCartItemRequest;
 
 class CartItemController extends Controller
 {
@@ -13,9 +13,11 @@ class CartItemController extends Controller
      */
     public function index()
     {
-        $cartItems = auth()->user()->cartItems;
-        $data = ['cartItems' => $cartItems,];
-        return view('cart_items.index', $data);
+        $cartItems = auth()->user()
+                ->cartItems()
+                ->with('product')
+                ->get();
+        return view('cart_items.index', compact('cartItems'));
     }
 
     /**
@@ -29,15 +31,18 @@ class CartItemController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCarItemRequest $request)
+    public function store(StoreCartItemRequest $request)
     {
-        //
+        auth()->user()
+              ->cartItems()
+              ->create($request->all());
+        return back();
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(CarItem $carItem)
+    public function show(CartItem $cartItem)
     {
         //
     }
@@ -45,7 +50,7 @@ class CartItemController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(CarItem $carItem)
+    public function edit(CartItem $cartItem)
     {
         //
     }
@@ -53,7 +58,7 @@ class CartItemController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCarItemRequest $request, CarItem $carItem)
+    public function update(UpdateCartItemRequest $request, CartItem $cartItem)
     {
         //
     }
@@ -61,7 +66,7 @@ class CartItemController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CarItem $carItem)
+    public function destroy(CartItem $cartItem)
     {
         //
     }

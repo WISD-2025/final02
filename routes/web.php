@@ -6,11 +6,13 @@ use Livewire\Volt\Volt;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\OrderController;
+use App\Models\Product;   
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+Route::post('/cart_items', [CartItemController::class, 'store'])->name('cart_items.store');
 Route::get('/cart_items', [CartItemController::class, 'index'])->name('cart_items.index');
 Route::resource('orders', OrderController::class)->middleware(['auth']);
 Route::resource('products',ProductController::class)->only([
@@ -66,6 +68,9 @@ Route::middleware(['auth'])->group(function () {
         )
         ->name('two-factor.show');
 });
+
+Route::get('/shop', [ProductController::class, 'shop'])->name('shop.index');
+Route::get('/shop/{product}', [ProductController::class, 'item'])->name('shop.item');
 
 // Resource Routes for products:
 //
