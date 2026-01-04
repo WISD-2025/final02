@@ -31,11 +31,22 @@
                     <a class="nav-link" href="{{ route('shop.index') }}">Shop</a>
                 </li>
             </ul>
+            <div class="d-flex gap-2">
+                <a class="btn btn-outline-dark" href="{{ route('cart_items.index') }}">
+                    <i class="bi-cart-fill me-1"></i>
+                    購物車
+                </a>
+                <a class="btn btn-outline-dark" href="{{ route('login') }}">
+                    <i class="bi-person-circle me-1"></i>
+                    登入
+                </a>
 
-            <a class="btn btn-outline-dark" href="{{ route('cart_items.index') }}">
-                <i class="bi-cart-fill me-1"></i>
-                Cart
-            </a>
+                <a class="btn btn-outline-dark" href="{{ route('register') }}">
+                    <i class="bi-person-circle me-1"></i>
+                    註冊
+                </a>
+            </div>
+
         </div>
     </div>
 </nav>
