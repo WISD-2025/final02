@@ -18,8 +18,9 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="{{ route('shop.index') }}">Start Bootstrap</a>
-
+        <a class="navbar-brand fw-bold fs-3" href="{{ route('shop.index') }}">
+            歡樂頌
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent">
             <span class="navbar-toggler-icon"></span>
@@ -28,10 +29,18 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('shop.index') }}">Shop</a>
+
                 </li>
             </ul>
             <div class="d-flex gap-2">
+                <a class="btn btn-outline-dark" href="{{ route('menu.index') }}">
+                    <i class="bi-list-ul me-1"></i>
+                    菜單
+                </a>
+                <a class="btn btn-outline-dark" href="{{ route('orders.index') }}">
+                    <i class="bi-receipt me-1"></i>
+                    購買紀錄
+                </a>
                 <a class="btn btn-outline-dark" href="{{ route('cart_items.index') }}">
                     <i class="bi-cart-fill me-1"></i>
                     購物車
@@ -40,13 +49,10 @@
                     <i class="bi-person-circle me-1"></i>
                     登入
                 </a>
-
                 <a class="btn btn-outline-dark" href="{{ route('register') }}">
-                    <i class="bi-person-circle me-1"></i>
                     註冊
                 </a>
             </div>
-
         </div>
     </div>
 </nav>
@@ -60,7 +66,7 @@
 <footer class="py-5 bg-dark">
     <div class="container">
         <p class="m-0 text-center text-white">
-            Copyright &copy; eshop
+            Copyright &copy; 歡樂頌
         </p>
     </div>
 </footer>
