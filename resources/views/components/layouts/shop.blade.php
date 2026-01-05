@@ -13,7 +13,7 @@
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
     <link href="{{ asset('css/cart.css') }}" rel="stylesheet">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -33,10 +33,6 @@
                 </li>
             </ul>
             <div class="d-flex gap-2">
-                <a class="btn btn-outline-dark" href="{{ route('menu.index') }}">
-                    <i class="bi-list-ul me-1"></i>
-                    菜單
-                </a>
                 <a class="btn btn-outline-dark" href="{{ route('orders.index') }}">
                     <i class="bi-receipt me-1"></i>
                     購買紀錄
@@ -58,15 +54,15 @@
 </nav>
 
 {{-- ⭐ 關鍵：頁面內容插在這 --}}
-<main>
+<main class="flex-fill">
     {{ $slot }}
 </main>
 
 <!-- Footer -->
-<footer class="py-5 bg-dark">
+<footer class="py-5 bg-dark mt-auto">
     <div class="container">
         <p class="m-0 text-center text-white">
-            Copyright &copy; 歡樂頌
+            Copyright © 歡樂頌
         </p>
     </div>
 </footer>

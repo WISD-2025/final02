@@ -29,3 +29,7 @@ Route::resource('products', ProductController::class)->only([
     'store',
     'update',
 ]);
+
+//order
+Route::get('/order/{product}', [OrderController::class, 'show'])
+    ->name('order.show');

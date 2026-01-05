@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Models\Product;
 
 class OrderController extends Controller
 {
@@ -36,9 +37,9 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Order $order)
+    public function show(Product $product)
     {
-        return view('orders.show', compact('order'));
+        return view('order.show', compact('product'));
     }
 
     /**

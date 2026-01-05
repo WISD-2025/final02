@@ -31,7 +31,7 @@
                             </div>
 
                             <div class="card-footer bg-transparent border-0">
-                                <a href="{{ url('/order') }}"
+                                <a href="{{ route('order.show', $product->id) }}"
                                    class="btn btn-outline-dark">
                                     我要訂購
                                 </a>
@@ -64,7 +64,7 @@
                             </div>
 
                             <div class="card-footer bg-transparent border-0">
-                                <a href="{{ url('/order') }}"
+                                <a href="{{ route('order.show', $product->id) }}"
                                    class="btn btn-outline-dark">
                                     我要訂購
                                 </a>
