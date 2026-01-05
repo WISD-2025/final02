@@ -1,52 +1,79 @@
-<x-layouts.shop title="Shop">
+<x-shop-layout title="歡樂頌">
+
+    <!-- Hero -->
     <header class="bg-dark py-5">
-        <div class="container px-4 px-lg-5 my-5">
-            <div class="text-center text-white">
-                <h1 class="display-4 fw-bolder">Shop in style</h1>
-                <p class="lead fw-normal text-white-50 mb-0">
-                    商品列表
-                </p>
-            </div>
+        <div class="container text-center text-white">
+            <h3 class="display-4 fw-bolder">歡樂頌，甜與鹹的可頌專賣店</h3>
+            <p class="lead text-white-50 mb-0">
+                透過用心，為每一位顧客帶來簡單的美味與生活的歡樂。
+            </p>
         </div>
     </header>
-    <!-- Section-->
+
+    <!-- 🍫 甜可頌 -->
     <section class="py-5">
-            <div class="container px-4 px-lg-5 mt-5">
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                @foreach ($products as $product)
-                    <div class="col mb-5">
-                        <div class="card h-100">
+        <div class="container">
+            <h2 class="mb-4">🍫 甜可頌</h2>
 
-                            <!-- 商品圖片 -->
-                            <img class="card-img-top"
-                                src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg"
-                                alt="{{ $product->name }}" />
-
-                            <!-- 商品內容 -->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <h5 class="fw-bolder">
-                                        {{ $product->name }}
-                                    </h5>
-
-                                    ${{ $product->price }}
-                                </div>
+            <div class="row row-cols-1 row-cols-md-3 row-cols-xl-4 g-4">
+                @foreach ($sweetProducts as $product)
+                    <div class="col">
+                        <div class="card h-100 text-center">
+                            <div class="product-image">
+                                <img src="{{ asset($product->image) }}"
+                                     alt="{{ $product->name }}">
                             </div>
 
-                            <!-- 操作 -->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center">
-                                    <a class="btn btn-outline-dark mt-auto"
-                                    href="{{ route('shop.item', $product) }}">
-                                        View
-                                    </a>
-                                </div>
+                            <div class="card-body">
+                                <h5 class="fw-bolder">{{ $product->name }}</h5>
+                                <p class="text-muted">$50</p>
+                                <p class="small">{{ $product->description }}</p>
                             </div>
 
+                            <div class="card-footer bg-transparent border-0">
+                                <a href="{{ url('/order') }}"
+                                   class="btn btn-outline-dark">
+                                    我要訂購
+                                </a>
+                            </div>
                         </div>
                     </div>
                 @endforeach
-                </div>
             </div>
-        </section>
-</x-layouts.shop>
+        </div>
+    </section>
+
+    <!-- 🥓 鹹可頌 -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="mb-4">🥓 鹹可頌</h2>
+
+            <div class="row row-cols-1 row-cols-md-3 row-cols-xl-4 g-4">
+                @foreach ($savoryProducts as $product)
+                    <div class="col">
+                        <div class="card h-100 text-center">
+                            <div class="product-image">
+                                <img src="{{ asset($product->image) }}"
+                                     alt="{{ $product->name }}">
+                            </div>
+
+                            <div class="card-body">
+                                <h5 class="fw-bolder">{{ $product->name }}</h5>
+                                <p class="text-muted">$100</p>
+                                <p class="small">{{ $product->description }}</p>
+                            </div>
+
+                            <div class="card-footer bg-transparent border-0">
+                                <a href="{{ url('/order') }}"
+                                   class="btn btn-outline-dark">
+                                    我要訂購
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+</x-shop-layout>
