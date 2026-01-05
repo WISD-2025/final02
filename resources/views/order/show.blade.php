@@ -48,9 +48,20 @@
                     </button>
                 </div>
 
-                <button class="btn btn-dark px-4 py-2">
-                    加入購物車
-                </button>
+                <form action="{{ route('cart_items.store') }}" method="POST">
+                    @csrf
+
+                    <!-- 商品 ID -->
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+                    <!-- 數量 -->
+                    <input type="hidden" name="quantity" id="quantityInput" value="1">
+
+                    <button type="submit" class="btn btn-dark px-4 py-2">
+                        加入購物車
+                    </button>
+                </form>
+
 
             </div>
         </div>
@@ -58,17 +69,18 @@
 
     <script>
         function changeQty(amount) {
-            const input = document.getElementById('quantity');
-            let value = parseInt(input.value);
+            const displayInput = document.getElementById('quantity');
+            const hiddenInput  = document.getElementById('quantityInput');
 
+            let value = parseInt(displayInput.value);
             value = value + amount;
 
-            if (value < 1) {
-                value = 1;
-            }
+            if (value < 1) value = 1;
 
-            input.value = value;
+            displayInput.value = value;
+            hiddenInput.value  = value; // ⭐ 關鍵
         }
     </script>
+
 
 </x-layouts.shop>

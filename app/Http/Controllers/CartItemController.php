@@ -33,10 +33,14 @@ class CartItemController extends Controller
      */
     public function store(StoreCartItemRequest $request)
     {
-        auth()->user()
-              ->cartItems()
-              ->create($request->all());
-        return back();
+        CartItem::create([
+            'user_id'    => auth()->id(),   // 使用者
+            'product_id' => $request->product_id,
+            'quantity'   => $request->quantity,
+        ]);
+
+        return redirect()->route('cart_items.index')
+            ->with('success', '已加入購物車');
     }
 
     /**
