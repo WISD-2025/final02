@@ -7,6 +7,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ChangeController;
 
 /* 首頁 */
 Route::get('/', function () {
@@ -46,5 +47,12 @@ Route::middleware('auth')->group(function () {
         ->name('cart_items.destroy');
     });
 
+    Route::get('/change', [ChangeController::class, 'index'])
+        ->middleware('auth')
+        ->name('change.index');
+
+    Route::post('/change/update', [ChangeController::class, 'update'])
+        ->middleware('auth')
+        ->name('change.update');
 
 
