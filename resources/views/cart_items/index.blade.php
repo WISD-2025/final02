@@ -138,6 +138,7 @@
 
                                <div class="col-md-4">
                                    <input type="text"
+                                          id="detailAddress"
                                           class="form-control"
                                           placeholder="請輸入詳細地址">
                                </div>
@@ -197,9 +198,13 @@
                             <input type="hidden" name="payment_method" value="cash">
                             <input type="hidden" name="total" value="{{ $total }}">
 
-                            <button type="submit" class="btn btn-success w-100">
+                            <button type="submit"
+                                    id="confirmOrderBtn"
+                                    class="btn btn-success w-100"
+                                    disabled>
                                 確認
                             </button>
+
                         </form>
                     </div>
                 </div>
@@ -329,6 +334,89 @@
 
         /* ⭐ 頁面載入先算一次 ⭐ */
         updateUI();
+        validateOrder();
+        
+        /* ===== 縣市 → 區域資料 ===== */
+        const districtData = {
+            taipei: ['中正區', '大安區', '信義區', '士林區'],
+            taichung: ['太平區', '西屯區', '北區', '南區'],
+            kaohsiung: ['三民區', '左營區', '前鎮區', '苓雅區'],
+        };
+
+        /* ===== 當縣市改變時，更新區域 ===== */
+        citySelect.addEventListener('change', function () {
+            const city = this.value;
+
+            // 清空區域選單
+            districtSelect.innerHTML = '';
+
+            if (!city || !districtData[city]) {
+                districtSelect.innerHTML =
+                    '<option value="">請先選擇縣市</option>';
+                validateOrder();
+                return;
+            }
+
+            // 加入「請選擇區域」
+            districtSelect.innerHTML =
+                '<option value="">請選擇區域</option>';
+
+            // 塞入對應區域
+            districtData[city].forEach(district => {
+                const option = document.createElement('option');
+                option.value = district;
+                option.textContent = district;
+                districtSelect.appendChild(option);
+            });
+
+            validateOrder();
+        });
+        const detailAddress = document.getElementById('detailAddress');
+
+        /* ===== 下單條件檢查 ===== */
+        function validateOrder() {
+            let valid = true;
+
+            // 送貨方式
+            if (!deliveryMethod.value) valid = false;
+
+            // 宅配要填完整地址
+            if (deliveryMethod.value === 'home') {
+                if (!citySelect.value) valid = false;
+                if (!districtSelect.value) valid = false;
+                if (!detailAddress.value.trim()) valid = false;
+            }
+
+            // 付款方式
+            if (!paymentMethod.value) valid = false;
+
+            // 信用卡付款要填卡號
+            if (paymentMethod.value === 'card') {
+                const cardInput = creditCardArea.querySelector('input');
+                if (!cardInput.value.trim()) valid = false;
+            }
+
+            confirmBtn.disabled = !valid;
+        }
+
+        [
+            deliveryMethod,
+            citySelect,
+            districtSelect,
+            paymentMethod,
+        ].forEach(el => {
+            el.addEventListener('change', validateOrder);
+        });
+
+        if (detailAddress) {
+            detailAddress.addEventListener('input', validateOrder);
+        }
+
+        const cardInput = creditCardArea.querySelector('input');
+        if (cardInput) {
+            cardInput.addEventListener('input', validateOrder);
+        }
+
     </script>
     @if (session('order_success'))
         <div id="orderSuccessModal" class="modal-overlay">
