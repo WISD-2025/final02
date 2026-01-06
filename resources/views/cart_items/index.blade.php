@@ -99,10 +99,13 @@
                         </div>
 
                         {{-- 送貨方式 --}}
-                        <select id="deliveryMethod" class="form-select">
-                            <option value="store">到店取貨</option>
-                            <option value="home">宅配到府</option>
-                        </select>
+                        <div class="mb-3">
+                            <label for="deliveryMethod" class="form-label">送貨方式</label>
+                            <select id="deliveryMethod" class="form-select">
+                                <option value="store">到店取貨</option>
+                                <option value="home">宅配到府</option>
+                            </select>
+                        </div>
 
                         {{-- 到店取貨地址 --}}
                         <div class="mb-3" id="storeAddress">
@@ -143,10 +146,13 @@
 
 
                         {{-- 付款方式 --}}
-                        <select id="paymentMethod" class="form-select">
-                            <option value="cash">現金</option>
-                            <option value="card">信用卡</option>
-                        </select>
+                        <div class="mb-3">
+                            <label for="paymentMethod" class="form-label">付款方式</label>
+                            <select id="paymentMethod" class="form-select">
+                                <option value="cash">現金</option>
+                                <option value="card">信用卡</option>
+                            </select>
+                        </div>
 
                         {{-- 信用卡卡號 --}}
                         <div class="mb-3 d-none" id="creditCardArea">
@@ -189,9 +195,11 @@
                             </li>
                         </ul>
 
-
-
-                        <button id="confirmOrderBtn" class="btn btn-success w-100 py-2">
+                        <button
+                            type="button"
+                            id="confirmOrderBtn"
+                            class="btn btn-success w-100"
+                        >
                             確認
                         </button>
 

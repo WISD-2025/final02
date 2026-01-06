@@ -10860,3 +10860,8 @@ textarea.form-control-lg {
   border: 2px solid #000;  /* 深黑框，電商感 */
   box-shadow: 0 4px 8px rgba(0,0,0,0.06);
 }
+
+/* 修正 navbar dropdown 被擋住 */
+.navbar .dropdown-menu {
+    z-index: 1055; /* 比 card / sticky 高 */
+}

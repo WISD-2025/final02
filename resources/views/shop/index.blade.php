@@ -1,9 +1,11 @@
-<x-shop-layout title="歡樂頌">
+<x-layouts.shop title="歡樂頌">
 
-    <!-- Hero -->
+<!-- Hero -->
     <header class="bg-dark py-5">
         <div class="container text-center text-white">
-            <h3 class="display-4 fw-bolder">歡樂頌，甜與鹹的可頌專賣店</h3>
+            <h3 class="display-4 fw-bolder">
+                歡樂頌，甜與鹹的可頌專賣店
+            </h3>
             <p class="lead text-white-50 mb-0">
                 透過用心，為每一位顧客帶來簡單的美味與生活的歡樂。
             </p>
@@ -75,5 +77,4 @@
             </div>
         </div>
     </section>
-
-</x-shop-layout>
+</x-layouts.shop>

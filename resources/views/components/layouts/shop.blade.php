@@ -22,7 +22,7 @@
             歡樂頌
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent">
+                data-bs-target="#navbarSupportedContent">
             <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -34,20 +34,52 @@
             </ul>
             <div class="d-flex gap-2">
                 <a class="btn btn-outline-dark" href="{{ route('orders.index') }}">
-                    <i class="bi-receipt me-1"></i>
                     購買紀錄
                 </a>
+
                 <a class="btn btn-outline-dark" href="{{ route('cart_items.index') }}">
-                    <i class="bi-cart-fill me-1"></i>
                     購物車
                 </a>
-                <a class="btn btn-outline-dark" href="{{ route('login') }}">
-                    <i class="bi-person-circle me-1"></i>
-                    登入
-                </a>
-                <a class="btn btn-outline-dark" href="{{ route('register') }}">
-                    註冊
-                </a>
+
+                @guest
+                    <a class="btn btn-outline-dark" href="{{ route('login') }}">登入</a>
+                    <a class="btn btn-outline-dark" href="{{ route('register') }}">註冊</a>
+                @endguest
+
+                @auth
+                    @auth
+                        <div class="dropdown">
+                            <button class="btn btn-outline-dark dropdown-toggle"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <i class="bi-person-circle me-1"></i>
+                                {{ auth()->user()->name }}，您好
+                            </button>
+
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                        <i class="bi-pencil-square me-2"></i>
+                                        更改個資
+                                    </a>
+                                </li>
+
+                                <li><hr class="dropdown-divider"></li>
+
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item text-danger">
+                                            <i class="bi-box-arrow-right me-2"></i>
+                                            登出
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    @endauth
+                @endauth
             </div>
         </div>
     </div>
