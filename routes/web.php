@@ -40,4 +40,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', function () {
         return view('profile');
     })->name('profile.edit');
-});
+
+    Route::delete('/cart_items/{cartItem}', [CartItemController::class, 'destroy'])
+        ->middleware('auth')
+        ->name('cart_items.destroy');
+    });
+
+
+

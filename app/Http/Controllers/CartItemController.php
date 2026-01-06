@@ -72,6 +72,12 @@ class CartItemController extends Controller
      */
     public function destroy(CartItem $cartItem)
     {
-        //
+         if ($cartItem->user_id !== auth()->id()) {
+                abort(403);
+            }
+
+            $cartItem->delete();
+
+            return redirect()->route('cart_items.index');
     }
 }

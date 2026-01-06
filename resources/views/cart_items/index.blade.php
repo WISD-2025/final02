@@ -17,11 +17,12 @@
                     <div class="card-body p-0">
 
                         {{-- 表頭 --}}
-                        <div class="row text-muted fw-semibold border-bottom py-2 px-3">
+                        <div class="row text-muted fw-semibold border-bottom py-2 px-3 text-nowrap align-items-center">
                             <div class="col-5">商品資料</div>
                             <div class="col-2 text-center">單價</div>
-                            <div class="col-3 text-center">數量</div>
-                            <div class="col-2 text-end">小計</div>
+                            <div class="col-2 text-center">數量</div>
+                            <div class="col-2 text-start">小計</div>
+                            <div class="col-1 text-center">移除</div>
                         </div>
 
                         @php $total = 0; @endphp
@@ -35,15 +36,13 @@
 
                             <div class="row align-items-center border-bottom py-3 px-3">
 
-                                {{-- 圖片 + 名稱 --}}
+                                {{-- 商品資料 --}}
                                 <div class="col-5">
                                     <div class="d-flex align-items-center gap-3">
-                                        {{-- 商品圖片 --}}
                                         <img src="{{ asset($item->product->image) }}"
-                                                 alt="{{ $item->product->name }}"
-                                                 class="cart-product-img">
+                                             alt="{{ $item->product->name }}"
+                                             class="cart-product-img">
 
-                                        {{-- 商品名稱 --}}
                                         <div class="fw-semibold">
                                             {{ $item->product->name }}
                                         </div>
@@ -56,15 +55,33 @@
                                 </div>
 
                                 {{-- 數量 --}}
-                                <div class="col-3 text-center">
-                                    <div class="btn-group btn-group-sm">
-                                        <button class="btn btn-light">{{ $qty }}</button>
-                                    </div>
+                                <div class="col-2 text-center">
+                                    <button class="btn btn-light btn-sm">{{ $qty }}</button>
                                 </div>
 
-                                {{-- 小計 --}}
-                                <div class="col-2 text-end fw-bold">
+                                {{-- ⭐ 小計（單獨一欄，跟表頭對齊） --}}
+                                <div class="col-2 text-center fw-bold">
                                     NT${{ $subtotal }}
+                                </div>
+
+                                {{-- ⭐ 移除（單獨一欄，正中） --}}
+                                <div class="col-1 text-center">
+                                    <form method="POST"
+                                          action="{{ route('cart_items.destroy', $item) }}"
+                                          onsubmit="return confirm('確定要移除這個商品嗎？')">
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit"
+                                                class="btn btn-link p-0"
+                                                style="
+                                                    font-size: 1.8rem;
+                                                    line-height: 1;
+                                                    text-decoration: none;
+                                                ">
+                                            🗑
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         @endforeach
@@ -274,33 +291,44 @@
         function updateUI() {
             const isStore  = deliveryMethod.value === 'store';
 
-            /* 地址顯示 */
-            storeAddress.classList.toggle('d-none', !isStore);
-            homeAddress.classList.toggle('d-none', isStore);
+                /* 地址顯示 */
+                storeAddress.classList.toggle('d-none', !isStore);
+                homeAddress.classList.toggle('d-none', isStore);
 
-            /* 付款方式 */
-            if (isStore) {
-                paymentMethod.innerHTML = `
-            <option value="cash">現金</option>
-            <option value="card">信用卡</option>
-        `;
-                paymentMethod.value = 'cash';
-                creditCardArea.classList.add('d-none');
-            } else {
-                paymentMethod.innerHTML = `
-            <option value="card">信用卡</option>
-        `;
-                paymentMethod.value = 'card';
-                creditCardArea.classList.remove('d-none');
+                /* ⭐ 關鍵：控制縣市 / 區域是否可選 ⭐ */
+                citySelect.disabled = isStore;
+                districtSelect.disabled = isStore;
+
+                if (isStore) {
+                    citySelect.value = '';
+                    districtSelect.innerHTML = '<option value="">請先選擇縣市</option>';
+                }
+
+                /* 付款方式 */
+                if (isStore) {
+                    paymentMethod.innerHTML = `
+                        <option value="cash">現金</option>
+                        <option value="card">信用卡</option>
+                    `;
+                    paymentMethod.value = 'cash';
+                    creditCardArea.classList.add('d-none');
+                } else {
+                    paymentMethod.innerHTML = `
+                        <option value="card">信用卡</option>
+                    `;
+                    paymentMethod.value = 'card';
+                    creditCardArea.classList.remove('d-none');
+                }
+
+                /* 金額計算 */
+                const subtotal = getNumber(subtotalEl.innerText);
+                const shipping = isStore ? 0 : 120;
+
+                shippingEl.innerText = 'NT$' + shipping;
+                totalEl.innerText    = 'NT$' + (subtotal + shipping);
+
+                validateOrder();
             }
-
-            /* 金額計算 ⭐ */
-            const subtotal = getNumber(subtotalEl.innerText);
-            const shipping = isStore ? 0 : 120;
-
-            shippingEl.innerText = 'NT$' + shipping;
-            totalEl.innerText    = 'NT$' + (subtotal + shipping);
-        }
 
         /* ===== 事件 ===== */
         deliveryMethod.addEventListener('change', updateUI);
@@ -310,7 +338,6 @@
         });
 
         confirmBtn.addEventListener('click', function (e) {
-            e.preventDefault();
 
             const totalText = totalEl.innerText;
             const payType   = paymentMethod.value;
@@ -335,7 +362,7 @@
         /* ⭐ 頁面載入先算一次 ⭐ */
         updateUI();
         validateOrder();
-        
+
         /* ===== 縣市 → 區域資料 ===== */
         const districtData = {
             taipei: ['中正區', '大安區', '信義區', '士林區'],
