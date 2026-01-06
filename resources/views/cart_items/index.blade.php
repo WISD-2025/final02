@@ -161,12 +161,8 @@
                                    class="form-control"
                                    placeholder="xxxx-xxxx-xxxx-xxxx">
                         </div>
-
-
                     </div>
                 </div>
-
-
             </div>
 
             {{-- 右：訂單資訊 --}}
@@ -191,18 +187,20 @@
 
                             <li class="list-group-item d-flex justify-content-between">
                                 <span>合計</span>
-                                <strong id="total">NT${{ $total }}</strong>
+                                <strong id="total">NT$</strong>
                             </li>
                         </ul>
 
-                        <button
-                            type="button"
-                            id="confirmOrderBtn"
-                            class="btn btn-success w-100"
-                        >
-                            確認
-                        </button>
+                        <form method="POST" action="{{ route('orders.store') }}">
+                            @csrf
 
+                            <input type="hidden" name="payment_method" value="cash">
+                            <input type="hidden" name="total" value="{{ $total }}">
+
+                            <button type="submit" class="btn btn-success w-100">
+                                確認
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -244,128 +242,104 @@
 
 
 
-<script>
-/* ===== DOM ===== */
-const deliveryMethod = document.getElementById('deliveryMethod'); // store / home
-const storeAddress   = document.getElementById('storeAddress');
-const homeAddress    = document.getElementById('homeAddress');
+    <script>
+        /* ===== DOM ===== */
+        const deliveryMethod = document.getElementById('deliveryMethod'); // store / home
+        const storeAddress   = document.getElementById('storeAddress');
+        const homeAddress    = document.getElementById('homeAddress');
 
-const citySelect     = document.getElementById('citySelect');
-const districtSelect = document.getElementById('districtSelect');
+        const citySelect     = document.getElementById('citySelect');
+        const districtSelect = document.getElementById('districtSelect');
 
-const paymentMethod  = document.getElementById('paymentMethod'); // cash / card
-const creditCardArea = document.getElementById('creditCardArea');
+        const paymentMethod  = document.getElementById('paymentMethod'); // cash / card
+        const creditCardArea = document.getElementById('creditCardArea');
 
-const shippingEl     = document.getElementById('shipping');
-const subtotalEl     = document.getElementById('subtotal');
-const totalEl        = document.getElementById('total');
+        const shippingEl     = document.getElementById('shipping');
+        const subtotalEl     = document.getElementById('subtotal');
+        const totalEl        = document.getElementById('total');
 
-const confirmBtn     = document.getElementById('confirmOrderBtn');
+        const confirmBtn     = document.getElementById('confirmOrderBtn');
 
-/* ===== 縣市 → 區資料 ===== */
-const districtData = {
-    taipei: ['中正區', '大同區', '中山區', '松山區', '大安區'],
-    taichung: ['中區', '東區', '西區', '南區', '北區'],
-    kaohsiung: ['鹽埕區', '鼓山區', '左營區', '楠梓區', '三民區']
-};
+        /* ===== 工具 ===== */
+        function getNumber(text) {
+            return parseInt(text.replace(/[^\d]/g, ''), 10) || 0;
+        }
 
-/* ===== 工具 ===== */
-function getNumber(text) {
-    return parseInt(text.replace(/[^\d]/g, ''), 10);
-}
+        /* ===== 核心 UI 控制 ===== */
+        function updateUI() {
+            const isStore  = deliveryMethod.value === 'store';
 
-/* ===== 核心 UI 控制（地址 / 付款 / 運費） ===== */
-function updateUI() {
-    const isStore = deliveryMethod.value === 'store';
+            /* 地址顯示 */
+            storeAddress.classList.toggle('d-none', !isStore);
+            homeAddress.classList.toggle('d-none', isStore);
 
-    /* 地址 */
-    storeAddress.classList.toggle('d-none', !isStore);
-    homeAddress.classList.toggle('d-none', isStore);
-
-    /* 付款方式 */
-    if (isStore) {
-        paymentMethod.innerHTML = `
+            /* 付款方式 */
+            if (isStore) {
+                paymentMethod.innerHTML = `
             <option value="cash">現金</option>
             <option value="card">信用卡</option>
         `;
-        paymentMethod.value = 'cash';
-        creditCardArea.classList.add('d-none');
-    } else {
-        paymentMethod.innerHTML = `
+                paymentMethod.value = 'cash';
+                creditCardArea.classList.add('d-none');
+            } else {
+                paymentMethod.innerHTML = `
             <option value="card">信用卡</option>
         `;
-        paymentMethod.value = 'card';
-        creditCardArea.classList.remove('d-none');
-    }
+                paymentMethod.value = 'card';
+                creditCardArea.classList.remove('d-none');
+            }
 
-    /* 運費 */
-    const subtotal = getNumber(subtotalEl.innerText);
-    const shipping = isStore ? 0 : 120;
+            /* 金額計算 ⭐ */
+            const subtotal = getNumber(subtotalEl.innerText);
+            const shipping = isStore ? 0 : 120;
 
-    shippingEl.innerText = 'NT$' + shipping;
-    totalEl.innerText = 'NT$' + (subtotal + shipping);
-}
+            shippingEl.innerText = 'NT$' + shipping;
+            totalEl.innerText    = 'NT$' + (subtotal + shipping);
+        }
 
-/* ===== 事件：送貨方式 ===== */
-deliveryMethod.addEventListener('change', updateUI);
+        /* ===== 事件 ===== */
+        deliveryMethod.addEventListener('change', updateUI);
 
-/* ===== 事件：付款方式（顯示卡號） ===== */
-paymentMethod.addEventListener('change', function () {
-    creditCardArea.classList.toggle('d-none', this.value !== 'card');
-});
+        paymentMethod.addEventListener('change', function () {
+            creditCardArea.classList.toggle('d-none', this.value !== 'card');
+        });
 
-/* ===== 事件：縣市 → 區 ===== */
-citySelect.addEventListener('change', function () {
-    const city = this.value;
-    districtSelect.innerHTML = '<option value="">請選擇區</option>';
+        confirmBtn.addEventListener('click', function (e) {
+            e.preventDefault();
 
-    if (!districtData[city]) return;
+            const totalText = totalEl.innerText;
+            const payType   = paymentMethod.value;
 
-    districtData[city].forEach(d => {
-        const opt = document.createElement('option');
-        opt.value = d;
-        opt.textContent = d;
-        districtSelect.appendChild(opt);
-    });
-});
+            const msg = payType === 'cash'
+                ? `訂單金額：${totalText}\n到店取貨時請付款，是否確認下單？`
+                : `訂單金額：${totalText}\n是否確認付款？`;
 
-/* ===== 事件：確認訂單（⭐只留這一個） ===== */
-confirmBtn.addEventListener('click', function (e) {
-    e.preventDefault();
+            if (!confirm(msg)) return;
 
-    const totalText = totalEl.innerText;
-    const payType   = paymentMethod.value;
+            document.getElementById('successTitle').innerText =
+                payType === 'cash' ? '下單成功' : '付款成功';
 
-    let confirmMsg = '';
+            document.getElementById('successDesc').innerText =
+                payType === 'cash'
+                    ? '到店取貨時請至櫃檯付款'
+                    : '商品將於三天後寄出';
 
-    if (payType === 'cash') {
-        confirmMsg = `訂單金額：${totalText}\n到店取貨時請記得付款，是否確認下單？`;
-    } else {
-        confirmMsg = `訂單金額：${totalText}\n您確認付款嗎？`;
-    }
+            document.getElementById('successOverlay').classList.remove('d-none');
+        });
 
-    const ok = confirm(confirmMsg);
-    if (!ok) return;
+        /* ⭐ 頁面載入先算一次 ⭐ */
+        updateUI();
+    </script>
+    @if (session('order_success'))
+        <div id="orderSuccessModal" class="modal-overlay">
+            <div class="modal-box">
+                <h2 class="text-success">下單成功</h2>
+                <p>到店取貨時請至櫃檯付款</p>
 
-    // ===== 根據付款方式，改成功畫面文字 =====
-    const titleEl = document.getElementById('successTitle');
-    const descEl  = document.getElementById('successDesc');
-
-    if (payType === 'cash') {
-        titleEl.innerText = '下單成功';
-        descEl.innerText  = '到店取貨時請至櫃檯付款';
-    } else {
-        titleEl.innerText = '付款成功';
-        descEl.innerText  = '商品將於三天後寄出';
-    }
-
-    // 顯示成功畫面
-    document.getElementById('successOverlay').classList.remove('d-none');
-});
-
-/* ===== 初始化 ===== */
-updateUI();
-</script>
-
-
+                <a href="{{ route('shop.index') }}" class="btn btn-success">
+                    回首頁
+                </a>
+            </div>
+        </div>
+    @endif
 </x-layouts.shop>
