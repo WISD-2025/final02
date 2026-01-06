@@ -33,3 +33,7 @@ Route::resource('products', ProductController::class)->only([
 //order
 Route::get('/order/{product}', [OrderController::class, 'show'])
     ->name('order.show');
+
+Route::get('/orders/{product}', [OrderController::class, 'index'])
+    ->name('orders.index');
+

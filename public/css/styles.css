@@ -10849,3 +10849,14 @@ textarea.form-control-lg {
     display: flex;
     flex-direction: column;
 }
+
+.cart-product-img {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;     /* ⭐ 完整顯示圖片，不裁切 */
+  background-color: #fff;  /* 白底，圖片大小不同也好看 */
+  padding: 6px;            /* 留白，避免貼邊 */
+  border-radius: 14px;     /* 圓角 */
+  border: 2px solid #000;  /* 深黑框，電商感 */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+}
